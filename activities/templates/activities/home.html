@@ -1,0 +1,49 @@
+
+{% extends 'activities/base.html' %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded">
+    <h1 class="display-4">Welcome to Fitness Activity Tracker</h1>
+    <p class="lead">Track your fitness activities, monitor your progress, and achieve your fitness goals.</p>
+    <hr class="my-4">
+    <p>Log your workouts, view your history, and analyze your performance over time.</p>
+    {% if not user.is_authenticated %}
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{% url 'register' %}" role="button">Get Started</a>
+        <a class="btn btn-outline-primary btn-lg" href="{% url 'login' %}" role="button">Login</a>
+    </p>
+    {% else %}
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{% url 'activity_create' %}" role="button">Log New Activity</a>
+        <a class="btn btn-outline-primary btn-lg" href="{% url 'activity_list' %}" role="button">View Activities</a>
+    </p>
+    {% endif %}
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Track Activities</h5>
+                <p class="card-text">Log various fitness activities like running, cycling, weightlifting, and more.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Monitor Progress</h5>
+                <p class="card-text">View your activity history and track your progress over time.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Set Goals</h5>
+                <p class="card-text">Set fitness goals and track your achievements.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

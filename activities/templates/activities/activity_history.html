@@ -1,0 +1,112 @@
+
+{% extends 'activities/base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Activity History</h2>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Filters</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="activity_type" class="form-label">Activity Type</label>
+                <select name="activity_type" id="activity_type" class="form-select">
+                    <option value="">All Activities</option>
+                    <option value="Running" {% if request.GET.activity_type == "Running" %}selected{% endif %}>Running</option>
+                    <option value="Cycling" {% if request.GET.activity_type == "Cycling" %}selected{% endif %}>Cycling</option>
+                    <option value="Swimming" {% if request.GET.activity_type == "Swimming" %}selected{% endif %}>Swimming</option>
+                    <option value="Weightlifting" {% if request.GET.activity_type == "Weightlifting" %}selected{% endif %}>Weightlifting</option>
+                    <option value="Yoga" {% if request.GET.activity_type == "Yoga" %}selected{% endif %}>Yoga</option>
+                    <option value="Walking" {% if request.GET.activity_type == "Walking" %}selected{% endif %}>Walking</option>
+                    <option value="Hiking" {% if request.GET.activity_type == "Hiking" %}selected{% endif %}>Hiking</option>
+                    <option value="Other" {% if request.GET.activity_type == "Other" %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="start_date" class="form-label">Start Date</label>
+                <input type="date" name="start_date" id="start_date" class="form-control" 
+                       value="{{ request.GET.start_date }}">
+            </div>
+            <div class="col-md-4">
+                <label for="end_date" class="form-label">End Date</label>
+                <input type="date" name="end_date" id="end_date" class="form-control" 
+                       value="{{ request.GET.end_date }}">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+                <a href="{% url 'activity_history' %}" class="btn btn-secondary">Clear Filters</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Activity Summary</h5>
+    </div>
+    <div class="card-body">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6>Total Activities</h6>
+                        <h3>{{ activities|length }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6>Total Duration</h6>
+                        <h3>{{ total_duration }} min</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6>Total Calories</h6>
+                        <h3>{{ total_calories }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if activities %}
+<div class="mt-4">
+    <h4>Activity Details</h4>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Duration (min)</th>
+                    <th>Distance (km)</th>
+                    <th>Calories</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in activities %}
+                <tr>
+                    <td>{{ activity.activity_type }}</td>
+                    <td>{{ activity.duration }}</td>
+                    <td>{{ activity.distance|default:"-" }}</td>
+                    <td>{{ activity.calories_burned|default:"-" }}</td>
+                    <td>{{ activity.date|date:"M d, Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info mt-4">
+    No activities found with the selected filters.
+</div>
+{% endif %}
+{% endblock %}

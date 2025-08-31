@@ -1,0 +1,70 @@
+
+{% extends 'activities/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>My Activities</h2>
+    <a href="{% url 'activity_create' %}" class="btn btn-primary">Log New Activity</a>
+</div>
+
+{% if activities %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Duration (min)</th>
+                <th>Distance (km)</th>
+                <th>Calories</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity in activities %}
+            <tr>
+                <td>{{ activity.activity_type }}</td>
+                <td>{{ activity.duration }}</td>
+                <td>{{ activity.distance|default:"-" }}</td>
+                <td>{{ activity.calories_burned|default:"-" }}</td>
+                <td>{{ activity.date|date:"M d, Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'activity_update' activity.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <a href="{% url 'activity_delete' activity.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if is_paginated %}
+<nav aria-label="Activity pagination">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="alert alert-info">
+    You haven't logged any activities yet. <a href="{% url 'activity_create' %}">Log your first activity</a>.
+</div>
+{% endif %}
+{% endblock %}
